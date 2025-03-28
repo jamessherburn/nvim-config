@@ -12,6 +12,9 @@ Plug 'joshdick/onedark.vim'
 Plug 'github/copilot.vim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
+Plug 'vim-test/vim-test'
+Plug 'itchyny/lightline.vim'
+Plug 'tpope/vim-fugitive'
 
 call plug#end()
 
@@ -25,6 +28,16 @@ filetype plugin indent on
 let g:coc_global_extensions = ['coc-go']
 
 let mapleader = "\<Space>"
+
+let g:lightline = {
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ],
+  \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+  \ },
+  \ 'component_function': {
+  \   'gitbranch': 'FugitiveHead'
+  \ },
+  \ }
 
 " Optional: Set up some basic settings
 set number
@@ -121,6 +134,8 @@ require'compe'.setup {
   };
 }
 EOF
+
+nnoremap <leader>cp :let @+ = expand('%:p')<CR>
 
 " When opening the terminal, position it at the bottom and automatically enter
 " fish shell.
