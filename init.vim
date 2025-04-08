@@ -101,6 +101,8 @@ endfunction
 -- Set key mappings using vim.api.nvim_set_keymap
 vim.api.nvim_set_keymap('n', '<leader><Left>', ':call AdjustNvimTreeWidth(5)<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader><Right>', ':call AdjustNvimTreeWidth(-5)<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader><up>', ':resize +2<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader><down>', ':resize -2<CR>', { noremap = true, silent = true })
 EOF
 
 lua << EOF
@@ -139,7 +141,6 @@ nnoremap <leader>cp :let @+ = expand('%:p')<CR>
 
 " When opening the terminal, position it at the bottom and automatically enter
 " fish shell.
-
 
 
 
