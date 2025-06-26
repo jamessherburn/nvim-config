@@ -9,6 +9,7 @@ My NVIM `init.vim` file and global command for quickly opening it from anywhere.
    alias nvim-config='nvim ~/.config/nvim/init.vim'
    ```
 4. Reload your shell configuration file or restart your terminal.
+5. Open nvim anywhere and run `:PlugInstall` to install the plugins.
 
 # Key Bindings
 - `nvim .` to open the current directory in NVIM.
