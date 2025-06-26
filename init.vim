@@ -15,6 +15,16 @@ Plug 'hrsh7th/nvim-compe'
 Plug 'vim-test/vim-test'
 Plug 'itchyny/lightline.vim'
 Plug 'tpope/vim-fugitive'
+Plug 'vim-test/vim-test'
+
+" Required for Copilot Chat
+Plug 'nvim-lua/plenary.nvim' " For async functions and utility
+Plug 'CopilotC-Nvim/CopilotChat.nvim', { 'branch': 'main', 'do': 'make tiktoken' }
+" Optional: For better markdown rendering in the chat window
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " If you don't have it already
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' } " Another option for markdown
+" CopilotChat.nvim recommends `render-markdown.nvim`
+Plug 'MeanderingProgrammer/render-markdown.nvim'
 
 call plug#end()
 
@@ -48,6 +58,16 @@ set expandtab
 
 let g:go_fmt_command = "goimports"
 let g:go_auto_type_info = 1
+
+let test#strategy = 'neovim'
+let test#go#runner = 'gotest'
+let g:ultest_use_pty = 1
+
+nmap <leader>tn :TestNearest<CR>
+nmap <leader>tf :TestFile<CR>
+nmap <leader>ts :TestSuite<CR>
+nmap <leader>tl :TestLast<CR>
+nmap <leader>tv :TestVisit<CR>
 
 let g:copilot_filetypes = {
   \ 'go': v:true,
@@ -137,16 +157,85 @@ require'compe'.setup {
 }
 EOF
 
+lua << EOF
+require("CopilotChat").setup({
+    -- Configuration options go here.
+    -- These are just some common ones, refer to the plugin's README for a full list.
+
+    -- General options for the chat window
+    window = {
+        layout = 'float', -- 'float' (floating window), 'split' (horizontal split), 'vsplit' (vertical split)
+        width = 0.8,      -- Percentage of editor width
+        height = 0.8,     -- Percentage of editor height
+        row = 0.1,        -- Row offset (for float)
+        col = 0.1,        -- Column offset (for float)
+        relative = 'editor', -- 'editor' or 'cursor' for float position
+    },
+
+    -- Mappings (examples, adjust to your preference)
+    mappings = {
+        -- Open a new chat session (floating window)
+        open_chat_window = {
+            normal = '<leader>cc',
+            insert = '<C-c>cc',
+        },
+        -- Ask a question about the current selection (visual mode)
+        ask_selection = {
+            visual = '<leader>ccx',
+        },
+        -- Explain selected code
+        explain_selection = {
+            visual = '<leader>cce',
+        },
+        -- Generate tests for selected code
+        generate_tests_selection = {
+            visual = '<leader>cct',
+        },
+        -- Review selected code
+        review_selection = {
+            visual = '<leader>ccr',
+        },
+        -- Fix selected code
+        fix_selection = {
+            visual = '<leader>ccf',
+        },
+        -- Accept nearest diff (if Copilot suggests a code change)
+        accept_diff = {
+            normal = '<leader>y', -- Example: <leader>y to accept
+        },
+        -- Submit prompt in chat window
+        submit_prompt = {
+            normal = '<CR>',
+            insert = '<CR>',
+        },
+    },
+
+    -- Prompts (customize or add your own)
+    prompts = {
+        -- Example of a custom prompt
+        -- MyCustomPrompt = "Act as an expert {filetype} developer. {selection} Explain this code in detail.",
+    },
+
+    -- Agents (if you want to switch between different AI models/behaviors)
+    -- This is an advanced feature and might not be immediately necessary.
+    -- agents = {
+    --     -- "perplexityai", -- Example if you set up an agent for Perplexity AI
+    -- },
+
+    -- Enable markdown rendering if you installed `render-markdown.nvim`
+    render_markdown = {
+        enabled = true,
+    },
+})
+
+-- Optional: Setup render-markdown.nvim if you are using it
+require('render-markdown').setup({
+    file_types = { 'markdown', 'copilot-chat' }, -- Ensure it renders both markdown and copilot-chat buffers
+})
+
+EOF
+
 nnoremap <leader>cp :let @+ = expand('%:p')<CR>
 
 " When opening the terminal, position it at the bottom and automatically enter
 " fish shell.
-
-
-
-
-
-
-
-
-
